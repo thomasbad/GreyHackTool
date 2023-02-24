@@ -1,0 +1,41 @@
+random_ip = function()
+	first_byte_range = range(0,	255)
+	first_byte_range.remove(192) //reserved
+	first_byte_range.remove(191) //reserved
+	first_byte_range.remove(0) //reserved
+	first_byte_range.remove(10) //private
+	first_byte_range.remove(172) //private
+	first_byte_range.remove(128) //reserved
+	first_byte_range.remove(223) //reserved
+
+	rest_byte_range = range(0,255)
+	
+	ip = []
+	ip.push(floor(rnd() * first_byte_range.len))
+	for i in range(2)
+		ip.push(floor(rnd() * rest_byte_range.len))
+	end for
+	ip = ip.join(".")
+
+	if is_valid_ip(ip) and get_router(ip) and get_shell.ping(ip) then
+		return ip
+	end if
+	return random_ip
+end function
+
+while true
+	ip = random_ip
+	router = get_router(ip)
+	ports = router.used_ports
+
+	is_hack_shop = false
+	for port in ports
+		info = router.port_info(port)
+		print info
+		if info.indexOf("repository") != null then
+			exit "there is your hack shop " + ip
+		end if
+	end for
+end while
+
+
